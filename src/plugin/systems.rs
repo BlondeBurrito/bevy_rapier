@@ -1421,7 +1421,7 @@ mod tests {
     fn colliding_entities_updates() {
         let mut app = App::new();
         app.add_event::<CollisionEvent>()
-            .add_system(update_colliding_entities);
+            .add_systems(Update, update_colliding_entities);
 
         let entity1 = app.world.spawn(CollidingEntities::default()).id();
         let entity2 = app.world.spawn(CollidingEntities::default()).id();
@@ -1508,7 +1508,7 @@ mod tests {
     fn async_collider_initializes() {
         let mut app = App::new();
         app.add_plugin(HeadlessRenderPlugin)
-            .add_system(init_async_colliders);
+            .add_systems(Update, init_async_colliders);
 
         let mut meshes = app.world.resource_mut::<Assets<Mesh>>();
         let cube = meshes.add(Cube::default().into());
@@ -1535,7 +1535,7 @@ mod tests {
 
         let mut app = App::new();
         app.add_plugin(HeadlessRenderPlugin)
-            .add_system(init_async_scene_colliders.after(scene_spawner_system));
+            .add_systems(Update, init_async_scene_colliders.after(scene_spawner_system));
 
         let mut meshes = app.world.resource_mut::<Assets<Mesh>>();
         let cube_handle = meshes.add(Cube::default().into());

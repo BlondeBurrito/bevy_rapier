@@ -133,7 +133,6 @@ impl<PhysicsHooksSystemParam> Default for RapierPhysicsPlugin<PhysicsHooksSystem
 
 /// [`StageLabel`] for each phase of the plugin.
 #[derive(Debug, Hash, PartialEq, Eq, Clone, SystemSet)]
-#[system_set(base)]
 pub enum PhysicsSet {
     /// This set runs the systems responsible for synchronizing (and
     /// initializing) backend data structures with current component state.
@@ -196,6 +195,7 @@ where
         // Add each set as necessary
         if self.default_system_setup {
             app.configure_sets(
+				Main,
                 (
                     PhysicsSet::SyncBackend,
                     PhysicsSet::SyncBackendFlush,
@@ -203,23 +203,25 @@ where
                     PhysicsSet::Writeback,
                 )
                     .chain()
-                    .after(CoreSet::UpdateFlush)
-                    .before(CoreSet::PostUpdate),
             );
 
             app.add_systems(
-                Self::get_systems(PhysicsSet::SyncBackend).in_base_set(PhysicsSet::SyncBackend),
+				PostUpdate,
+                Self::get_systems(PhysicsSet::SyncBackend).in_set(PhysicsSet::SyncBackend),
             );
             app.add_systems(
+				PostUpdate,
                 Self::get_systems(PhysicsSet::SyncBackendFlush)
-                    .in_base_set(PhysicsSet::SyncBackendFlush),
+                    .in_set(PhysicsSet::SyncBackendFlush),
             );
             app.add_systems(
+				PostUpdate,
                 Self::get_systems(PhysicsSet::StepSimulation)
-                    .in_base_set(PhysicsSet::StepSimulation),
+                    .in_set(PhysicsSet::StepSimulation),
             );
             app.add_systems(
-                Self::get_systems(PhysicsSet::Writeback).in_base_set(PhysicsSet::Writeback),
+				PostUpdate,
+                Self::get_systems(PhysicsSet::Writeback).in_set(PhysicsSet::Writeback),
             );
         }
     }

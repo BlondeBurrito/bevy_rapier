@@ -117,9 +117,9 @@ impl Plugin for DebugLinesPlugin {
         let lines_config = DebugLinesConfig::always_on_top(self.always_on_top);
         app.init_resource::<DebugLines>()
             .add_startup_system(setup)
-            .add_system(
+            .add_systems(
+				PostUpdate,
                 update
-                    .in_base_set(CoreSet::PostUpdate)
                     .in_set(DrawLinesLabel),
             )
             .insert_resource(lines_config.clone());
