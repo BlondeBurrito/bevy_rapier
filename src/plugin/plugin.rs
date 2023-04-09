@@ -195,7 +195,7 @@ where
         // Add each set as necessary
         if self.default_system_setup {
             app.configure_sets(
-				Main,
+				PostUpdate,
                 (
                     PhysicsSet::SyncBackend,
                     PhysicsSet::SyncBackendFlush,
