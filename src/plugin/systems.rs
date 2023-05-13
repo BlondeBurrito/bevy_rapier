@@ -489,7 +489,7 @@ pub fn writeback_rigid_bodies(
     config: Res<RapierConfiguration>,
     sim_to_render_time: Res<SimulationToRenderTime>,
     global_transforms: Query<&GlobalTransform>,
-    mut writeback: Query<RigidBodyWritebackComponents, Without<RigidBodyDisabled>>,
+    mut writeback: Query<RigidBodyWritebackComponents>,
 ) {
     let context = &mut *context;
     let scale = context.physics_scale;
@@ -1534,8 +1534,10 @@ mod tests {
         use bevy::scene::scene_spawner_system;
 
         let mut app = App::new();
-        app.add_plugin(HeadlessRenderPlugin)
-            .add_systems(Update, init_async_scene_colliders.after(scene_spawner_system));
+        app.add_plugin(HeadlessRenderPlugin).add_systems(
+            Update,
+            init_async_scene_colliders.after(scene_spawner_system),
+        );
 
         let mut meshes = app.world.resource_mut::<Assets<Mesh>>();
         let cube_handle = meshes.add(Cube::default().into());
